@@ -1064,9 +1064,17 @@ async function login(password) {
 
 /* Отправка сообщения на сервер */
 
-async function askNoire(message) {
+async function askNoire(message, chatMessages = []) {
 
   const token = sessionStorage.getItem("noire_token");
+
+  const history = chatMessages.map(item => ({
+
+    role: item.role === "ai" ? "assistant" : "user",
+
+    content: item.text
+
+  }));
 
   const response = await fetch(SERVER + "/chat", {
 
@@ -1083,6 +1091,8 @@ async function askNoire(message) {
     body: JSON.stringify({
 
       message,
+
+      messages: history,
 
       mode: state.mode,
 
@@ -1110,14 +1120,17 @@ async function askNoire(message) {
 
   if (!response.ok) {
 
-    throw new Error(result.error || "Ошибка сервера: " + response.status);
+    throw new Error(
+
+      result.error || "Ошибка сервера: " + response.status
+
+    );
 
   }
 
   return result.reply || "Сервер ответил без текста.";
 
 }
-
 /* Экран входа */
 
 function renderLogin() {
@@ -1250,7 +1263,7 @@ async function sendMessage(text) {
 
   try {
 
-    const reply = await askNoire(cleanText);
+   const reply = await askNoire(cleanText, chat.messages);
 
     const current = active();
 
