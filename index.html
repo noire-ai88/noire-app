@@ -1,145 +1,126 @@
-forEach(button => {
-  button.onclick = () => {
-    state.mode = button.dataset.mode;
-    saveState();
-    render();
-  };
-});
+<p class="sub">Записи хранятся локально на устройстве.</p>
+ <label class="field"><span>НОВАЯ ЗАПИСЬ</span>
+ <input id="memoryInput" placeholder="Что сохранить?"></label>
+ <button class="btn" id="addMemory">＋ Сохранить запись</button>
+ <div style="margin-top:18px">
+ <div class="eyebrow">СОХРАНЁННЫЕ ЗАПИСИ</div>
+ ${state.memories.length?state.memories.map((x,i)=>`
+ <div class="memory-item"><span>${esc(x)}</span>
+ <button class="btn danger" data-remove="${i}">Удалить</button></div>`).join(""):'<div class="empty">Память пока пуста.</div>'}
+ </div></div>`;
+}
 
-const input = document.getElementById("prompt");
-const send = document.getElementById("send");
+function personalityHTML(){
+ return `<div class="panel">
+ <h2>Личность NOIRE</h2>
+ <p class="sub">Настройки стиля ответов. В этой версии инструкция пока сохраняется локально.</p>
+ <label class="field"><span>АКТИВНЫЙ ПРОФИЛЬ</span>
+ <input value="${esc(state.mode)}" disabled></label>
+ <label class="field"><span>СИСТЕМНАЯ ИНСТРУКЦИЯ</span>
+ <textarea id="instructions">${esc(state.instructions)}</textarea></label>
+ <button class="btn" id="saveInstructions">Сохранить инструкцию</button>
+ <p class="muted" id="feedback"></p>
+ </div>`;
+}
 
-const submit = () => {
-  const value = input.value;
-  if (value.trim() && !busy) {
-    if (!activeChat()) {
-      newChat();
-    }
-    input.value = "";
+function settingsHTML(){
+ return `<div class="panel">
+ <h2>Настройки</h2>
+ <div class="memory-item"><span>Язык</span><strong>Русский</strong></div>
+ <div class="memory-item"><span>Оформление</span><strong>Obsidian / Burgundy</strong></div>
+ <div class="memory-item"><span>Хранение</span><strong>Локально</strong></div>
+ <div class="memory-item"><span>Версия</span><strong>0.3 Beta</strong></div>
+ <p class="sub">Очистка данных браузера может удалить переписки и настройки.</p>
+ <button class="btn secondary" id="logout">Выйти из NOIRE</button>
+ <p></p>
+ <button class="btn danger" id="clearData">Очистить локальные данные</button>
+ </div>`;
+}
+
+function render(){
+ if(!sessionStorage.getItem("noire_token")){
+  renderLogin();
+  return;
+ }
+
+ document.getElementById("navigation").hidden=false;
+ document.getElementById("status").textContent="● Сессия активна";
+ document.querySelectorAll(".tab").forEach(b=>{
+  b.classList.toggle("active",b.dataset.tab===tab);
+ });
+
+ const main=document.getElementById("main");
+
+ if(tab==="chat"){
+  main.innerHTML=chatHTML();
+  const create=document.getElementById("createChat");
+  if(create)create.onclick=newChat;
+
+  document.querySelectorAll("[data-mode]").forEach(b=>{
+   b.onclick=()=>{state.mode=b.dataset.mode;save();render();};
+  });
+
+  const input=document.getElementById("prompt");
+  const button=document.getElementById("send");
+
+  const submit=()=>{
+   const value=input.value;
+   if(value.trim()&&!busy){
+    if(!active())newChat();
+    input.value="";
     sendMessage(value);
-  }
-};
+   }
+  };
 
-send.onclick = submit;
-
-input.addEventListener("keydown", event => {
-  if (event.key === "Enter" && !event.shiftKey) {
-    event.preventDefault();
+  button.onclick=submit;
+  input.addEventListener("keydown",e=>{
+   if(e.key==="Enter"&&!e.shiftKey){
+    e.preventDefault();
     submit();
-  }
-});
+   }
+  });
 
-document.querySelectorAll("[data-prompt]").forEach(button => {
-  button.onclick = () => {
-    input.value = button.dataset.prompt;
-    input.focus();
+  document.querySelectorAll("[data-prompt]").forEach(b=>{
+   b.onclick=()=>{input.value=b.dataset.prompt;input.focus();};
+  });
+
+  const box=document.getElementById("messages");
+  box.scrollTop=box.scrollHeight;
+
+ }else if(tab==="history"){
+  main.innerHTML=historyHTML();
+  document.getElementById("newChat").onclick=newChat;
+
+  document.querySelectorAll("[data-open]").forEach(b=>{
+   b.onclick=()=>{
+    state.activeChat=Number(b.dataset.open);
+    tab="chat";save();render();
+   };
+  });
+
+  document.querySelectorAll("[data-delete]").forEach(b=>{
+   b.onclick=()=>{
+    const id=Number(b.dataset.delete);
+    state.chats=state.chats.filter(c=>c.id!==id);
+    if(state.activeChat===id)state.activeChat=null;
+    save();render();
+   };
+  });
+
+ }else if(tab==="memory"){
+  main.innerHTML=memoryHTML();
+  document.getElementById("addMemory").onclick=()=>{
+   const value=document.getElementById("memoryInput").value.trim();
+   if(value){state.memories.push(value);save();render();}
   };
-});
+  document.querySelectorAll("[data-remove]").forEach(b=>{
+   b.onclick=()=>{
+    state.memories.splice(Number(b.dataset.remove),1);
+    save();render();
+   };
+  });
 
-const messageBox = document.getElementById("messages");
-messageBox.scrollTop = messageBox.scrollHeight;
-} else if (tab === "history") {
-main.innerHTML = renderHistory();
-
-document.getElementById("newChat").onclick = newChat;
-
-document.querySelectorAll("[data-open]").forEach(button => {
-  button.onclick = () => {
-    state.activeChat = Number(button.dataset.open);
-    tab = "chat";
-    saveState();
-    render();
-  };
-});
-
-document.querySelectorAll("[data-delete]").forEach(button => {
-  button.onclick = () => {
-    const id = Number(button.dataset.delete);
-    state.chats = state.chats.filter(chat => chat.id !== id);
-
-    if (state.activeChat === id) {
-      state.activeChat = null;
-    }
-
-    saveState();
-    render();
-  };
-});
-} else if (tab === "memory") {
-main.innerHTML = renderMemory();
-
-document.getElementById("addMemory").onclick = () => {
-  const input = document.getElementById("memoryInput");
-  const value = input.value.trim();
-
-  if (value) {
-    state.memories.push(value);
-    saveState();
-    render();
-  }
-};
-
-document.querySelectorAll("[data-remove]").forEach(button => {
-  button.onclick = () => {
-    state.memories.splice(Number(button.dataset.remove), 1);
-    saveState();
-    render();
-  };
-});
-} else if (tab === "personality") {
-main.innerHTML = renderPersonality();
-
-document.getElementById("saveInstructions").onclick = () => {
-  state.instructions =
-    document.getElementById("instructions").value;
-
-  saveState();
-
-  document.getElementById("feedback").textContent =
-    "Инструкция сохранена на этом устройстве.";
-};
-} else if (tab === "settings") {
-main.innerHTML = renderSettings();
-
-document.getElementById("logout").onclick = () => {
-  sessionStorage.removeItem("noire_token");
-  render();
-};
-
-document.getElementById("clearData").onclick = () => {
-  if (confirm("Удалить все локальные данные NOIRE?")) {
-    localStorage.removeItem(STORAGE_KEY);
-    state = {...defaults};
-    render();
-  }
-};
-}
-}
-
-/* Переключение вкладок */
-document.querySelectorAll(".tab").forEach(button => {
-button.onclick = () => {
-tab = button.dataset.tab;
-render();
-};
-});
-
-/* Запуск */
-if (!state.activeChat && state.chats.length) {
-state.activeChat = state.chats[0].id;
-}
-
-render();
-
-/* Регистрация PWA */
-if ("serviceWorker" in navigator &&
-location.protocol.startsWith("http")) {
-window.addEventListener("load", () => {
-navigator.serviceWorker
-.register("./service-worker.js")
-.catch(() => {});
-});
-}
-</script>
-</body>
-</html>
+ }else if(tab==="personality"){
+  main.innerHTML=personalityHTML();
+  document.getElementById("saveInstructions").onclick=()=>{
+   state.
