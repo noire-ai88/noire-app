@@ -1065,71 +1065,45 @@ async function login(password) {
 /* Отправка сообщения на сервер */
 
 async function askNoire(message, chatMessages = []) {
-
   const token = sessionStorage.getItem("noire_token");
 
   const history = chatMessages.map(item => ({
-
     role: item.role === "ai" ? "assistant" : "user",
-
     content: item.text
-
   }));
 
   const response = await fetch(SERVER + "/chat", {
-
     method: "POST",
-
     headers: {
-
       "Content-Type": "application/json",
-
       "Authorization": "Bearer " + token
-
     },
-
     body: JSON.stringify({
-
-      message,
-
+      message: message,
       messages: history,
-
       mode: state.mode,
-
       instructions: state.instructions
-
     })
-
   });
 
   let result = {};
 
   try {
-
     result = await response.json();
-
   } catch {}
 
   if (response.status === 401) {
-
     sessionStorage.removeItem("noire_token");
-
     throw new Error("Сессия завершилась. Войди снова.");
-
   }
 
   if (!response.ok) {
-
     throw new Error(
-
       result.error || "Ошибка сервера: " + response.status
-
     );
-
   }
 
   return result.reply || "Сервер ответил без текста.";
-
 }
 /* Экран входа */
 
