@@ -1,100 +1,1829 @@
-onclick = submit;
+<!DOCTYPE html>
 
-input.addEventListener("keydown", event => {
-  if (event.key === "Enter" && !event.shiftKey) {
-    event.preventDefault();
-    submit();
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta name="theme-color" content="#09090c">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<title>NOIRE — Personal Intelligence</title>
+
+<link rel="manifest" href="./manifest.webmanifest">
+
+<link rel="apple-touch-icon" href="./icons/noire-192.png">
+
+<style>
+
+:root {
+
+  --bg:#09090c;
+
+  --panel:#111116;
+
+  --panel2:#17171e;
+
+  --border:#29242d;
+
+  --text:#f1edf2;
+
+  --muted:#89838e;
+
+  --wine:#651f39;
+
+  --wine2:#8d3152;
+
+  --danger:#a43c4d;
+
+  --radius:18px;
+
+}
+
+* {
+
+  box-sizing:border-box;
+
+  -webkit-tap-highlight-color:transparent;
+
+}
+
+body {
+
+  margin:0;
+
+  min-height:100vh;
+
+  min-height:100dvh;
+
+  background:
+
+    radial-gradient(ellipse at 50% -20%,#29121e 0%,transparent 55%),
+
+    var(--bg);
+
+  color:var(--text);
+
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+}
+
+button,input,textarea {
+
+  font:inherit;
+
+}
+
+button {
+
+  cursor:pointer;
+
+}
+
+.app {
+
+  min-height:100vh;
+
+  min-height:100dvh;
+
+  display:flex;
+
+  flex-direction:column;
+
+  max-width:850px;
+
+  margin:auto;
+
+  padding-bottom:calc(86px + env(safe-area-inset-bottom));
+
+}
+
+header {
+
+  position:sticky;
+
+  top:0;
+
+  z-index:5;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  padding:17px 20px;
+
+  background:rgba(9,9,12,.92);
+
+  backdrop-filter:blur(18px);
+
+  border-bottom:1px solid var(--border);
+
+}
+
+.brand {
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+}
+
+.logo {
+
+  width:43px;
+
+  height:43px;
+
+  display:grid;
+
+  place-items:center;
+
+  border:1px solid #6c2943;
+
+  border-radius:14px;
+
+  background:linear-gradient(145deg,#29121e,#100d13);
+
+  color:#d9a0b5;
+
+  font-family:Georgia,serif;
+
+  font-size:25px;
+
+}
+
+.brand-name {
+
+  font-family:Georgia,serif;
+
+  letter-spacing:4px;
+
+  font-size:19px;
+
+}
+
+.brand-sub {
+
+  color:var(--muted);
+
+  font-size:9px;
+
+  letter-spacing:2px;
+
+  margin-top:4px;
+
+}
+
+.status {
+
+  color:#b88b9d;
+
+  font-size:10px;
+
+  letter-spacing:1px;
+
+  text-align:right;
+
+}
+
+main {
+
+  flex:1;
+
+  padding:22px 17px;
+
+}
+
+.hero {
+
+  padding:24px 5px 18px;
+
+}
+
+.eyebrow {
+
+  color:#b77a92;
+
+  font-size:10px;
+
+  letter-spacing:2.5px;
+
+  margin-bottom:12px;
+
+}
+
+h1,h2,h3,p {
+
+  margin-top:0;
+
+}
+
+h1 {
+
+  font-family:Georgia,serif;
+
+  font-weight:400;
+
+  font-size:32px;
+
+  margin-bottom:10px;
+
+}
+
+h2 {
+
+  font-family:Georgia,serif;
+
+  font-weight:400;
+
+  font-size:25px;
+
+  margin-bottom:10px;
+
+}
+
+h3 {
+
+  font-size:14px;
+
+  font-weight:600;
+
+}
+
+.sub {
+
+  color:var(--muted);
+
+  font-size:13px;
+
+  line-height:1.6;
+
+}
+
+.panel {
+
+  background:linear-gradient(145deg,#15141a,#101015);
+
+  border:1px solid var(--border);
+
+  border-radius:var(--radius);
+
+  padding:19px;
+
+  margin-bottom:15px;
+
+}
+
+.mode-grid {
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:9px;
+
+  margin:16px 0;
+
+}
+
+.mode {
+
+  background:var(--panel);
+
+  border:1px solid var(--border);
+
+  color:var(--muted);
+
+  border-radius:13px;
+
+  padding:13px 5px;
+
+  font-size:11px;
+
+  letter-spacing:1px;
+
+}
+
+.mode.active {
+
+  background:#351725;
+
+  border-color:#85405b;
+
+  color:#f0c4d4;
+
+}
+
+.messages {
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:13px;
+
+  padding:8px 0 20px;
+
+}
+
+.message {
+
+  max-width:90%;
+
+  padding:13px 15px;
+
+  border-radius:16px;
+
+  font-size:14px;
+
+  line-height:1.6;
+
+  white-space:pre-wrap;
+
+  overflow-wrap:anywhere;
+
+}
+
+.message.user {
+
+  align-self:flex-end;
+
+  background:#492034;
+
+  border:1px solid #68314b;
+
+  border-bottom-right-radius:5px;
+
+}
+
+.message.ai {
+
+  align-self:flex-start;
+
+  background:#17161d;
+
+  border:1px solid #302934;
+
+  border-bottom-left-radius:5px;
+
+}
+
+.message-label {
+
+  color:#bd8ba0;
+
+  font-size:9px;
+
+  letter-spacing:1.5px;
+
+  margin-bottom:6px;
+
+}
+
+.composer {
+
+  position:sticky;
+
+  bottom:calc(76px + env(safe-area-inset-bottom));
+
+  display:flex;
+
+  gap:9px;
+
+  padding:12px;
+
+  background:rgba(12,11,16,.96);
+
+  border:1px solid var(--border);
+
+  border-radius:17px;
+
+  backdrop-filter:blur(16px);
+
+}
+
+.composer textarea {
+
+  flex:1;
+
+  min-width:0;
+
+  resize:none;
+
+  min-height:42px;
+
+  max-height:120px;
+
+  color:var(--text);
+
+  background:transparent;
+
+  border:0;
+
+  outline:none;
+
+  padding:11px 5px;
+
+  font-size:14px;
+
+}
+
+.send {
+
+  width:45px;
+
+  min-width:45px;
+
+  border:0;
+
+  border-radius:13px;
+
+  background:linear-gradient(145deg,#8a3454,#531d35);
+
+  color:white;
+
+  font-size:20px;
+
+}
+
+.send:disabled {
+
+  opacity:.45;
+
+}
+
+.btn {
+
+  width:100%;
+
+  border:1px solid #78334e;
+
+  border-radius:13px;
+
+  padding:13px 15px;
+
+  color:#f4dce5;
+
+  background:linear-gradient(145deg,#57233b,#351523);
+
+  font-size:13px;
+
+  margin-top:10px;
+
+}
+
+.btn.secondary {
+
+  background:#17151b;
+
+  border-color:var(--border);
+
+  color:var(--text);
+
+}
+
+.btn.danger {
+
+  background:#29151b;
+
+  border-color:#69303e;
+
+  color:#e5a4ae;
+
+}
+
+.field {
+
+  display:block;
+
+  margin:16px 0;
+
+}
+
+.field span {
+
+  display:block;
+
+  color:#b98b9d;
+
+  font-size:10px;
+
+  letter-spacing:1.5px;
+
+  margin-bottom:8px;
+
+}
+
+.field input,
+
+.field textarea {
+
+  width:100%;
+
+  background:#0d0c11;
+
+  border:1px solid var(--border);
+
+  border-radius:12px;
+
+  color:var(--text);
+
+  padding:13px;
+
+  outline:none;
+
+  font-size:14px;
+
+}
+
+.field textarea {
+
+  min-height:125px;
+
+  resize:vertical;
+
+  line-height:1.5;
+
+}
+
+.field input:focus,
+
+.field textarea:focus {
+
+  border-color:#85405b;
+
+}
+
+.memory-item {
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:12px;
+
+  padding:13px 0;
+
+  border-bottom:1px solid var(--border);
+
+  font-size:13px;
+
+  overflow-wrap:anywhere;
+
+}
+
+.memory-item:last-child {
+
+  border-bottom:0;
+
+}
+
+.memory-item .btn {
+
+  width:auto;
+
+  margin:0;
+
+  padding:7px 10px;
+
+  font-size:11px;
+
+}
+
+.chat-card {
+
+  padding:15px;
+
+  border:1px solid var(--border);
+
+  border-radius:14px;
+
+  background:var(--panel);
+
+  margin-bottom:10px;
+
+}
+
+.chat-card strong {
+
+  display:block;
+
+  font-size:14px;
+
+  margin-bottom:6px;
+
+}
+
+.chat-card small {
+
+  color:var(--muted);
+
+  font-size:11px;
+
+}
+
+.chat-actions {
+
+  display:flex;
+
+  gap:8px;
+
+  margin-top:10px;
+
+}
+
+.chat-actions button {
+
+  flex:1;
+
+  padding:9px;
+
+  border:1px solid var(--border);
+
+  border-radius:10px;
+
+  background:#1a171e;
+
+  color:var(--text);
+
+  font-size:11px;
+
+}
+
+.empty {
+
+  text-align:center;
+
+  color:var(--muted);
+
+  padding:30px 10px;
+
+  font-size:13px;
+
+  line-height:1.6;
+
+}
+
+.login-wrap {
+
+  min-height:70vh;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+}
+
+.login-card {
+
+  width:100%;
+
+  max-width:420px;
+
+  text-align:center;
+
+  padding:30px 22px;
+
+  border:1px solid var(--border);
+
+  border-radius:22px;
+
+  background:linear-gradient(145deg,#17131a,#0e0d12);
+
+}
+
+.login-logo {
+
+  width:70px;
+
+  height:70px;
+
+  margin:0 auto 20px;
+
+  display:grid;
+
+  place-items:center;
+
+  border:1px solid #85405b;
+
+  border-radius:22px;
+
+  color:#e0a8bd;
+
+  font-family:Georgia,serif;
+
+  font-size:40px;
+
+  background:#21121c;
+
+}
+
+.error {
+
+  color:#e49aa7;
+
+  font-size:12px;
+
+  margin-top:12px;
+
+}
+
+.muted {
+
+  color:var(--muted);
+
+  font-size:11px;
+
+  line-height:1.5;
+
+}
+
+.navigation {
+
+  position:fixed;
+
+  z-index:10;
+
+  bottom:0;
+
+  left:0;
+
+  right:0;
+
+  display:flex;
+
+  justify-content:center;
+
+  gap:0;
+
+  padding:9px 8px calc(9px + env(safe-area-inset-bottom));
+
+  background:rgba(12,11,15,.96);
+
+  border-top:1px solid var(--border);
+
+  backdrop-filter:blur(18px);
+
+}
+
+.navigation button {
+
+  flex:1;
+
+  max-width:150px;
+
+  border:0;
+
+  background:transparent;
+
+  color:#77717c;
+
+  padding:8px 3px;
+
+  font-size:10px;
+
+  letter-spacing:.5px;
+
+}
+
+.navigation button .nav-icon {
+
+  display:block;
+
+  font-size:21px;
+
+  margin-bottom:5px;
+
+}
+
+.navigation button.active {
+
+  color:#d7a0b5;
+
+}
+
+[hidden] {
+
+  display:none !important;
+
+}
+
+@media(min-width:700px) {
+
+  main {
+
+    padding:30px;
+
   }
-});
 
-const messages = document.getElementById("messages");
-messages.scrollTop = messages.scrollHeight;
-} else if (tab === "history") {
-main.innerHTML = historyHTML();
+  .hero {
 
-const newButton = document.getElementById("newChat");
-if (newButton) newButton.onclick = newChat;
+    padding-top:35px;
 
-document.querySelectorAll("[data-open]").forEach(button => {
-  button.onclick = () => {
-    state.activeChat = Number(button.dataset.open);
-    tab = "chat";
-    save();
-    render();
-  };
-});
+  }
 
-document.querySelectorAll("[data-delete]").forEach(button => {
-  button.onclick = () => {
-    const id = Number(button.dataset.delete);
-    state.chats = state.chats.filter(chat => chat.id !== id);
+}
 
-    if (state.activeChat === id) {
-      state.activeChat = null;
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+  <div class="brand">
+
+    <div class="logo">N</div>
+
+    <div>
+
+      <div class="brand-name">NOIRE</div>
+
+      <div class="brand-sub">INTELLIGENCE, REFINED</div>
+
+    </div>
+
+  </div>
+
+  <div class="status" id="status">● ОЖИДАНИЕ</div>
+
+</header>
+
+<main id="main"></main>
+
+<nav class="navigation" id="navigation" hidden>
+
+  <button class="tab active" data-tab="chat">
+
+    <span class="nav-icon">◈</span>ЧАТ
+
+  </button>
+
+  <button class="tab" data-tab="history">
+
+    <span class="nav-icon">▤</span>ИСТОРИЯ
+
+  </button>
+
+  <button class="tab" data-tab="memory">
+
+    <span class="nav-icon">◇</span>ПАМЯТЬ
+
+  </button>
+
+  <button class="tab" data-tab="personality">
+
+    <span class="nav-icon">♛</span>ЛИЧНОСТЬ
+
+  </button>
+
+</nav>
+
+</div>
+
+<script>
+
+"use strict";
+
+/* Адрес твоего Cloudflare Worker */
+
+const SERVER = "https://tiny-dust-495e.4vh4v2kv5d.workers.dev";
+
+/* Состояние приложения */
+
+const DEFAULT_STATE = {
+
+  chats: [],
+
+  activeChat: null,
+
+  memories: [],
+
+  mode: "CORE",
+
+  instructions: ""
+
+};
+
+function load() {
+
+  try {
+
+    const saved = JSON.parse(localStorage.getItem("noire_state"));
+
+    if (!saved || typeof saved !== "object") {
+
+      return structuredClone(DEFAULT_STATE);
+
     }
 
-    save();
-    render();
-  };
-});
-} else if (tab === "memory") {
-main.innerHTML = memoryHTML();
+    return {
 
-document.getElementById("addMemory").onclick = () => {
-  const input = document.getElementById("memoryInput");
-  const value = input.value.trim();
+      ...structuredClone(DEFAULT_STATE),
 
-  if (value) {
-    state.memories.push(value);
-    save();
-    render();
+      ...saved,
+
+      chats: Array.isArray(saved.chats) ? saved.chats : [],
+
+      memories: Array.isArray(saved.memories) ? saved.memories : []
+
+    };
+
+  } catch {
+
+    return structuredClone(DEFAULT_STATE);
+
   }
-};
 
-document.querySelectorAll("[data-remove]").forEach(button => {
-  button.onclick = () => {
-    state.memories.splice(Number(button.dataset.remove), 1);
-    save();
-    render();
-  };
-});
-} else if (tab === "personality") {
-main.innerHTML = personalityHTML();
-
-document.getElementById("saveInstructions").onclick = () => {
-  state.instructions = document.getElementById("instructions").value;
-  save();
-  document.getElementById("feedback").textContent = "Инструкция сохранена на устройстве.";
-};
-
-document.getElementById("logout").onclick = logout;
-
-document.getElementById("clearData").onclick = () => {
-  if (confirm("Удалить все локальные переписки, память и настройки?")) {
-    localStorage.removeItem("noire_state");
-    state = structuredClone(DEFAULT_STATE);
-    sessionStorage.removeItem("noire_token");
-    render();
-  }
-};
 }
+
+let state = load();
+
+let tab = "chat";
+
+let busy = false;
+
+const main = document.getElementById("main");
+
+const navigation = document.getElementById("navigation");
+
+const statusElement = document.getElementById("status");
+
+function save() {
+
+  localStorage.setItem("noire_state", JSON.stringify(state));
+
+}
+
+function esc(value) {
+
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+
+    "&": "&amp;",
+
+    "<": "&lt;",
+
+    ">": "&gt;",
+
+    '"': "&quot;",
+
+    "'": "&#39;"
+
+  })[char]);
+
+}
+
+function active() {
+
+  return state.chats.find(chat => chat.id === state.activeChat) || null;
+
+}
+
+function newChat() {
+
+  const chat = {
+
+    id: Date.now(),
+
+    title: "Новый диалог",
+
+    messages: [],
+
+    created: new Date().toISOString()
+
+  };
+
+  state.chats.unshift(chat);
+
+  state.activeChat = chat.id;
+
+  tab = "chat";
+
+  save();
+
+  render();
+
+}
+
+function logout() {
+
+  sessionStorage.removeItem("noire_token");
+
+  render();
+
+}
+
+/* Авторизация */
+
+async function login(password) {
+
+  const response = await fetch(SERVER + "/login", {
+
+    method: "POST",
+
+    headers: {
+
+      "Content-Type": "application/json"
+
+    },
+
+    body: JSON.stringify({ password })
+
+  });
+
+  let result = {};
+
+  try {
+
+    result = await response.json();
+
+  } catch {}
+
+  if (!response.ok || !result.token) {
+
+    throw new Error(result.error || "Не удалось войти. Проверь пароль.");
+
+  }
+
+  sessionStorage.setItem("noire_token", result.token);
+
+}
+
+/* Отправка сообщения на сервер */
+
+async function askNoire(message) {
+
+  const token = sessionStorage.getItem("noire_token");
+
+  const response = await fetch(SERVER + "/chat", {
+
+    method: "POST",
+
+    headers: {
+
+      "Content-Type": "application/json",
+
+      "Authorization": "Bearer " + token
+
+    },
+
+    body: JSON.stringify({
+
+      message,
+
+      mode: state.mode,
+
+      instructions: state.instructions
+
+    })
+
+  });
+
+  let result = {};
+
+  try {
+
+    result = await response.json();
+
+  } catch {}
+
+  if (response.status === 401) {
+
+    sessionStorage.removeItem("noire_token");
+
+    throw new Error("Сессия завершилась. Войди снова.");
+
+  }
+
+  if (!response.ok) {
+
+    throw new Error(result.error || "Ошибка сервера: " + response.status);
+
+  }
+
+  return result.reply || "Сервер ответил без текста.";
+
+}
+
+/* Экран входа */
+
+function renderLogin() {
+
+  navigation.hidden = true;
+
+  statusElement.textContent = "● ЗАЩИЩЁННЫЙ ДОСТУП";
+
+  main.innerHTML = `
+
+    <div class="login-wrap">
+
+      <div class="login-card">
+
+        <div class="login-logo">N</div>
+
+        <div class="eyebrow">PERSONAL INTELLIGENCE</div>
+
+        <h1>Добро пожаловать</h1>
+
+        <p class="sub">Войди в личное пространство NOIRE.</p>
+
+        <form id="loginForm">
+
+          <label class="field">
+
+            <span>ПАРОЛЬ ДОСТУПА</span>
+
+            <input
+
+              id="loginPassword"
+
+              type="password"
+
+              placeholder="Введи пароль"
+
+              autocomplete="current-password"
+
+              required
+
+            >
+
+          </label>
+
+          <button class="btn" id="loginButton" type="submit">
+
+            Войти в NOIRE
+
+          </button>
+
+          <p class="error" id="loginError"></p>
+
+        </form>
+
+        <p class="muted">INTELLIGENCE, REFINED</p>
+
+      </div>
+
+    </div>
+
+  `;
+
+  document.getElementById("loginForm").addEventListener("submit", async event => {
+
+    event.preventDefault();
+
+    const password = document.getElementById("loginPassword").value;
+
+    const button = document.getElementById("loginButton");
+
+    const error = document.getElementById("loginError");
+
+    button.disabled = true;
+
+    button.textContent = "Проверка...";
+
+    error.textContent = "";
+
+    try {
+
+      await login(password);
+
+      render();
+
+    } catch (err) {
+
+      error.textContent = err.message || "Ошибка входа.";
+
+      button.disabled = false;
+
+      button.textContent = "Войти в NOIRE";
+
+    }
+
+  });
+
+}
+
+/* Отправка сообщения */
+
+async function sendMessage(text) {
+
+  const chat = active();
+
+  if (!chat || busy) return;
+
+  const cleanText = text.trim();
+
+  if (!cleanText) return;
+
+  chat.messages.push({
+
+    role: "user",
+
+    text: cleanText
+
+  });
+
+  if (chat.messages.length === 1) {
+
+    chat.title = cleanText.slice(0, 42);
+
+  }
+
+  busy = true;
+
+  save();
+
+  render();
+
+  try {
+
+    const reply = await askNoire(cleanText);
+
+    const current = active();
+
+    if (current && current.id === chat.id) {
+
+      current.messages.push({
+
+        role: "ai",
+
+        text: reply
+
+      });
+
+    }
+
+  } catch (error) {
+
+    const current = active();
+
+    if (current && current.id === chat.id) {
+
+      current.messages.push({
+
+        role: "ai",
+
+        text: "Не удалось связаться с сервером. " + error.message
+
+      });
+
+    }
+
+  } finally {
+
+    busy = false;
+
+    save();
+
+    render();
+
+  }
+
+}
+
+/* HTML чата */
+
+function chatHTML() {
+
+  const chat = active();
+
+  const messages = chat
+
+    ? chat.messages.map(message => `
+
+        <div class="message ${message.role === "user" ? "user" : "ai"}">
+
+          <div class="message-label">
+
+            ${message.role === "user" ? "ВЫ" : "NOIRE"}
+
+          </div>
+
+          ${esc(message.text)}
+
+        </div>
+
+      `).join("")
+
+    : `
+
+      <div class="empty">
+
+        <div style="font-size:30px;margin-bottom:12px">◈</div>
+
+        Начни новый диалог с NOIRE.
+
+      </div>
+
+    `;
+
+  return `
+
+    <div class="hero">
+
+      <div class="eyebrow">PERSONAL INTELLIGENCE</div>
+
+      <h1>Добро пожаловать.</h1>
+
+      <p class="sub">Твоё пространство для идей, анализа и общения.</p>
+
+    </div>
+
+    <div class="mode-grid">
+
+      ${["CORE", "ANALYST", "CREATIVE"].map(mode => `
+
+        <button
+
+          class="mode ${state.mode === mode ? "active" : ""}"
+
+          data-mode="${mode}"
+
+        >${mode}</button>
+
+      `).join("")}
+
+    </div>
+
+    <div class="messages" id="messages">
+
+      ${messages}
+
+      ${busy ? `
+
+        <div class="message ai">
+
+          <div class="message-label">NOIRE</div>
+
+          Обрабатываю запрос...
+
+        </div>
+
+      ` : ""}
+
+    </div>
+
+    <div class="composer">
+
+      <textarea
+
+        id="prompt"
+
+        placeholder="Напиши сообщение..."
+
+        rows="1"
+
+        ${busy ? "disabled" : ""}
+
+      ></textarea>
+
+      <button class="send" id="send" ${busy ? "disabled" : ""}>↑</button>
+
+    </div>
+
+    <button class="btn secondary" id="createChat">＋ Новый диалог</button>
+
+  `;
+
+}
+
+/* История */
+
+function historyHTML() {
+
+  if (!state.chats.length) {
+
+    return `
+
+      <div class="hero">
+
+        <div class="eyebrow">ARCHIVE</div>
+
+        <h1>История</h1>
+
+        <p class="sub">Твои сохранённые диалоги.</p>
+
+      </div>
+
+      <div class="empty">Пока нет сохранённых диалогов.</div>
+
+      <button class="btn" id="newChat">＋ Создать диалог</button>
+
+    `;
+
+  }
+
+  return `
+
+    <div class="hero">
+
+      <div class="eyebrow">ARCHIVE</div>
+
+      <h1>История</h1>
+
+      <p class="sub">Все твои диалоги в одном месте.</p>
+
+    </div>
+
+    <button class="btn" id="newChat">＋ Новый диалог</button>
+
+    <div style="margin-top:20px">
+
+      ${state.chats.map(chat => `
+
+        <div class="chat-card">
+
+          <strong>${esc(chat.title)}</strong>
+
+          <small>${chat.messages.length} сообщений</small>
+
+          <div class="chat-actions">
+
+            <button data-open="${chat.id}">Открыть</button>
+
+            <button data-delete="${chat.id}">Удалить</button>
+
+          </div>
+
+        </div>
+
+      `).join("")}
+
+    </div>
+
+  `;
+
+}
+
+/* Память */
+
+function memoryHTML() {
+
+  return `
+
+    <div class="hero">
+
+      <div class="eyebrow">PERSONAL MEMORY</div>
+
+      <h1>Память</h1>
+
+      <p class="sub">Записи хранятся локально на устройстве.</p>
+
+    </div>
+
+    <div class="panel">
+
+      <label class="field">
+
+        <span>НОВАЯ ЗАПИСЬ</span>
+
+        <input id="memoryInput" placeholder="Что сохранить?">
+
+      </label>
+
+      <button class="btn" id="addMemory">＋ Сохранить запись</button>
+
+      <div style="margin-top:22px">
+
+        <div class="eyebrow">СОХРАНЁННЫЕ ЗАПИСИ</div>
+
+        ${state.memories.length
+
+          ? state.memories.map((value, index) => `
+
+              <div class="memory-item">
+
+                <span>${esc(value)}</span>
+
+                <button class="btn danger" data-remove="${index}">Удалить</button>
+
+              </div>
+
+            `).join("")
+
+          : `<div class="empty">Память пока пуста.</div>`
+
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+/* Личность и настройки */
+
+function personalityHTML() {
+
+  return `
+
+    <div class="hero">
+
+      <div class="eyebrow">PERSONALITY</div>
+
+      <h1>Личность NOIRE</h1>
+
+      <p class="sub">Настрой стиль общения и параметры приложения.</p>
+
+    </div>
+
+    <div class="panel">
+
+      <label class="field">
+
+        <span>АКТИВНЫЙ ПРОФИЛЬ</span>
+
+        <input value="${esc(state.mode)}" disabled>
+
+      </label>
+
+      <label class="field">
+
+        <span>СИСТЕМНАЯ ИНСТРУКЦИЯ</span>
+
+        <textarea id="instructions" placeholder="Опиши желаемый стиль ответов...">${esc(state.instructions)}</textarea>
+
+      </label>
+
+      <button class="btn" id="saveInstructions">Сохранить инструкцию</button>
+
+      <p class="muted" id="feedback"></p>
+
+    </div>
+
+    <div class="panel">
+
+      <div class="eyebrow">APP SETTINGS</div>
+
+      <div class="memory-item"><span>Язык</span><strong>Русский</strong></div>
+
+      <div class="memory-item"><span>Оформление</span><strong>Obsidian / Burgundy</strong></div>
+
+      <div class="memory-item"><span>Хранение</span><strong>Локально</strong></div>
+
+      <div class="memory-item"><span>Версия</span><strong>0.4 Beta</strong></div>
+
+      <p class="sub" style="margin-top:15px">
+
+        Переписки и настройки хранятся в локальном хранилище браузера.
+
+      </p>
+
+      <button class="btn secondary" id="logout">Выйти из NOIRE</button>
+
+      <button class="btn danger" id="clearData">Очистить локальные данные</button>
+
+    </div>
+
+  `;
+
+}
+
+/* Основной рендер */
+
+function render() {
+
+  if (!sessionStorage.getItem("noire_token")) {
+
+    renderLogin();
+
+    return;
+
+  }
+
+  navigation.hidden = false;
+
+  statusElement.textContent = "● СЕССИЯ АКТИВНА";
+
+  document.querySelectorAll(".tab").forEach(button => {
+
+    button.classList.toggle("active", button.dataset.tab === tab);
+
+  });
+
+  if (tab === "chat") {
+
+    main.innerHTML = chatHTML();
+
+    const create = document.getElementById("createChat");
+
+    if (create) create.onclick = newChat;
+
+    document.querySelectorAll("[data-mode]").forEach(button => {
+
+      button.onclick = () => {
+
+        state.mode = button.dataset.mode;
+
+        save();
+
+        render();
+
+      };
+
+    });
+
+    const input = document.getElementById("prompt");
+
+    const send = document.getElementById("send");
+
+    const submit = () => {
+
+      const value = input.value;
+
+      if (value.trim() && !busy) {
+
+        if (!active()) newChat();
+
+        else sendMessage(value);
+
+      }
+
+    };
+
+    send.onclick = submit;
+
+    input.addEventListener("keydown", event => {
+
+      if (event.key === "Enter" && !event.shiftKey) {
+
+        event.preventDefault();
+
+        submit();
+
+      }
+
+    });
+
+    const messages = document.getElementById("messages");
+
+    messages.scrollTop = messages.scrollHeight;
+
+  } else if (tab === "history") {
+
+    main.innerHTML = historyHTML();
+
+    const newButton = document.getElementById("newChat");
+
+    if (newButton) newButton.onclick = newChat;
+
+    document.querySelectorAll("[data-open]").forEach(button => {
+
+      button.onclick = () => {
+
+        state.activeChat = Number(button.dataset.open);
+
+        tab = "chat";
+
+        save();
+
+        render();
+
+      };
+
+    });
+
+    document.querySelectorAll("[data-delete]").forEach(button => {
+
+      button.onclick = () => {
+
+        const id = Number(button.dataset.delete);
+
+        state.chats = state.chats.filter(chat => chat.id !== id);
+
+        if (state.activeChat === id) {
+
+          state.activeChat = null;
+
+        }
+
+        save();
+
+        render();
+
+      };
+
+    });
+
+  } else if (tab === "memory") {
+
+    main.innerHTML = memoryHTML();
+
+    document.getElementById("addMemory").onclick = () => {
+
+      const input = document.getElementById("memoryInput");
+
+      const value = input.value.trim();
+
+      if (value) {
+
+        state.memories.push(value);
+
+        save();
+
+        render();
+
+      }
+
+    };
+
+    document.querySelectorAll("[data-remove]").forEach(button => {
+
+      button.onclick = () => {
+
+        state.memories.splice(Number(button.dataset.remove), 1);
+
+        save();
+
+        render();
+
+      };
+
+    });
+
+  } else if (tab === "personality") {
+
+    main.innerHTML = personalityHTML();
+
+    document.getElementById("saveInstructions").onclick = () => {
+
+      state.instructions = document.getElementById("instructions").value;
+
+      save();
+
+      document.getElementById("feedback").textContent = "Инструкция сохранена на устройстве.";
+
+    };
+
+    document.getElementById("logout").onclick = logout;
+
+    document.getElementById("clearData").onclick = () => {
+
+      if (confirm("Удалить все локальные переписки, память и настройки?")) {
+
+        localStorage.removeItem("noire_state");
+
+        state = structuredClone(DEFAULT_STATE);
+
+        sessionStorage.removeItem("noire_token");
+
+        render();
+
+      }
+
+    };
+
+  }
+
 }
 
 /* Переключение разделов */
+
 document.querySelectorAll(".tab").forEach(button => {
-button.addEventListener("click", () => {
-tab = button.dataset.tab;
-render();
-});
+
+  button.addEventListener("click", () => {
+
+    tab = button.dataset.tab;
+
+    render();
+
+  });
+
 });
 
 /* Запуск */
+
 render();
 
 /* Регистрация PWA */
+
 if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+
+  navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+
 }
+
 </script>
+
 </body>
+
 </html>
