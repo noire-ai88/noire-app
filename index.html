@@ -109,5 +109,19 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   });
 }
 </script>
-\n</body>
+\n<script>
+const NOIRE_SERVER = "ВСТАВЬ_АДРЕС_СВОЕГО_WORKER";
+
+async function sendToNoire(message) {
+  const response = await fetch(NOIRE_SERVER + "/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message })
+  });
+
+  if (!response.ok) throw new Error("Server error");
+  return await response.json();
+}
+</script>
+</body>
 </html>
