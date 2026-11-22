@@ -1,126 +1,100 @@
-<p class="sub">Записи хранятся локально на устройстве.</p>
- <label class="field"><span>НОВАЯ ЗАПИСЬ</span>
- <input id="memoryInput" placeholder="Что сохранить?"></label>
- <button class="btn" id="addMemory">＋ Сохранить запись</button>
- <div style="margin-top:18px">
- <div class="eyebrow">СОХРАНЁННЫЕ ЗАПИСИ</div>
- ${state.memories.length?state.memories.map((x,i)=>`
- <div class="memory-item"><span>${esc(x)}</span>
- <button class="btn danger" data-remove="${i}">Удалить</button></div>`).join(""):'<div class="empty">Память пока пуста.</div>'}
- </div></div>`;
-}
+onclick = submit;
 
-function personalityHTML(){
- return `<div class="panel">
- <h2>Личность NOIRE</h2>
- <p class="sub">Настройки стиля ответов. В этой версии инструкция пока сохраняется локально.</p>
- <label class="field"><span>АКТИВНЫЙ ПРОФИЛЬ</span>
- <input value="${esc(state.mode)}" disabled></label>
- <label class="field"><span>СИСТЕМНАЯ ИНСТРУКЦИЯ</span>
- <textarea id="instructions">${esc(state.instructions)}</textarea></label>
- <button class="btn" id="saveInstructions">Сохранить инструкцию</button>
- <p class="muted" id="feedback"></p>
- </div>`;
-}
-
-function settingsHTML(){
- return `<div class="panel">
- <h2>Настройки</h2>
- <div class="memory-item"><span>Язык</span><strong>Русский</strong></div>
- <div class="memory-item"><span>Оформление</span><strong>Obsidian / Burgundy</strong></div>
- <div class="memory-item"><span>Хранение</span><strong>Локально</strong></div>
- <div class="memory-item"><span>Версия</span><strong>0.3 Beta</strong></div>
- <p class="sub">Очистка данных браузера может удалить переписки и настройки.</p>
- <button class="btn secondary" id="logout">Выйти из NOIRE</button>
- <p></p>
- <button class="btn danger" id="clearData">Очистить локальные данные</button>
- </div>`;
-}
-
-function render(){
- if(!sessionStorage.getItem("noire_token")){
-  renderLogin();
-  return;
- }
-
- document.getElementById("navigation").hidden=false;
- document.getElementById("status").textContent="● Сессия активна";
- document.querySelectorAll(".tab").forEach(b=>{
-  b.classList.toggle("active",b.dataset.tab===tab);
- });
-
- const main=document.getElementById("main");
-
- if(tab==="chat"){
-  main.innerHTML=chatHTML();
-  const create=document.getElementById("createChat");
-  if(create)create.onclick=newChat;
-
-  document.querySelectorAll("[data-mode]").forEach(b=>{
-   b.onclick=()=>{state.mode=b.dataset.mode;save();render();};
-  });
-
-  const input=document.getElementById("prompt");
-  const button=document.getElementById("send");
-
-  const submit=()=>{
-   const value=input.value;
-   if(value.trim()&&!busy){
-    if(!active())newChat();
-    input.value="";
-    sendMessage(value);
-   }
-  };
-
-  button.onclick=submit;
-  input.addEventListener("keydown",e=>{
-   if(e.key==="Enter"&&!e.shiftKey){
-    e.preventDefault();
+input.addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
     submit();
-   }
-  });
+  }
+});
 
-  document.querySelectorAll("[data-prompt]").forEach(b=>{
-   b.onclick=()=>{input.value=b.dataset.prompt;input.focus();};
-  });
+const messages = document.getElementById("messages");
+messages.scrollTop = messages.scrollHeight;
+} else if (tab === "history") {
+main.innerHTML = historyHTML();
 
-  const box=document.getElementById("messages");
-  box.scrollTop=box.scrollHeight;
+const newButton = document.getElementById("newChat");
+if (newButton) newButton.onclick = newChat;
 
- }else if(tab==="history"){
-  main.innerHTML=historyHTML();
-  document.getElementById("newChat").onclick=newChat;
-
-  document.querySelectorAll("[data-open]").forEach(b=>{
-   b.onclick=()=>{
-    state.activeChat=Number(b.dataset.open);
-    tab="chat";save();render();
-   };
-  });
-
-  document.querySelectorAll("[data-delete]").forEach(b=>{
-   b.onclick=()=>{
-    const id=Number(b.dataset.delete);
-    state.chats=state.chats.filter(c=>c.id!==id);
-    if(state.activeChat===id)state.activeChat=null;
-    save();render();
-   };
-  });
-
- }else if(tab==="memory"){
-  main.innerHTML=memoryHTML();
-  document.getElementById("addMemory").onclick=()=>{
-   const value=document.getElementById("memoryInput").value.trim();
-   if(value){state.memories.push(value);save();render();}
+document.querySelectorAll("[data-open]").forEach(button => {
+  button.onclick = () => {
+    state.activeChat = Number(button.dataset.open);
+    tab = "chat";
+    save();
+    render();
   };
-  document.querySelectorAll("[data-remove]").forEach(b=>{
-   b.onclick=()=>{
-    state.memories.splice(Number(b.dataset.remove),1);
-    save();render();
-   };
-  });
+});
 
- }else if(tab==="personality"){
-  main.innerHTML=personalityHTML();
-  document.getElementById("saveInstructions").onclick=()=>{
-   state.
+document.querySelectorAll("[data-delete]").forEach(button => {
+  button.onclick = () => {
+    const id = Number(button.dataset.delete);
+    state.chats = state.chats.filter(chat => chat.id !== id);
+
+    if (state.activeChat === id) {
+      state.activeChat = null;
+    }
+
+    save();
+    render();
+  };
+});
+} else if (tab === "memory") {
+main.innerHTML = memoryHTML();
+
+document.getElementById("addMemory").onclick = () => {
+  const input = document.getElementById("memoryInput");
+  const value = input.value.trim();
+
+  if (value) {
+    state.memories.push(value);
+    save();
+    render();
+  }
+};
+
+document.querySelectorAll("[data-remove]").forEach(button => {
+  button.onclick = () => {
+    state.memories.splice(Number(button.dataset.remove), 1);
+    save();
+    render();
+  };
+});
+} else if (tab === "personality") {
+main.innerHTML = personalityHTML();
+
+document.getElementById("saveInstructions").onclick = () => {
+  state.instructions = document.getElementById("instructions").value;
+  save();
+  document.getElementById("feedback").textContent = "Инструкция сохранена на устройстве.";
+};
+
+document.getElementById("logout").onclick = logout;
+
+document.getElementById("clearData").onclick = () => {
+  if (confirm("Удалить все локальные переписки, память и настройки?")) {
+    localStorage.removeItem("noire_state");
+    state = structuredClone(DEFAULT_STATE);
+    sessionStorage.removeItem("noire_token");
+    render();
+  }
+};
+}
+}
+
+/* Переключение разделов */
+document.querySelectorAll(".tab").forEach(button => {
+button.addEventListener("click", () => {
+tab = button.dataset.tab;
+render();
+});
+});
+
+/* Запуск */
+render();
+
+/* Регистрация PWA */
+if ("serviceWorker" in navigator) {
+navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+}
+</script>
+</body>
+</html>
