@@ -1593,7 +1593,49 @@ function personalityHTML() {
   `;
 
 }
+/* NOIRE STUDIO */
 
+function studioHTML() {
+
+return `
+
+<div class="hero">
+
+  <div class="eyebrow">IMAGE GENERATION</div>
+
+  <h1>NOIRE STUDIO</h1>
+
+  <p class="sub">
+    Пространство для создания визуальных идей.
+  </p>
+
+</div>
+
+<div class="panel">
+
+  <label class="field">
+
+    <span>ОПИШИ ИЗОБРАЖЕНИЕ</span>
+
+    <textarea
+      id="imagePrompt"
+      placeholder="Например: готический замок в тумане, кинематографичный свет..."
+    ></textarea>
+
+  </label>
+
+  <button class="btn" id="generateImage">
+    ✧ Создать изображение
+  </button>
+
+  <p class="muted" id="studioStatus">
+    Генератор пока не подключён.
+  </p>
+
+</div>
+`;
+
+}
 /* Основной рендер */
 
 function render() {
