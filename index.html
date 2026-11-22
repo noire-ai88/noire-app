@@ -66,7 +66,43 @@ function demoReply(text){
  if(t.includes('памят'))return 'Управление памятью находится во вкладке «Память». В этой версии сведения добавляются только вручную, после вашего решения.';
  return 'Сообщение принято интерфейсом NOIRE. Это демонстрационный ответ, а не результат работы языковой модели. Следующий технический этап — подключить настоящий AI-движок через защищённый серверный API.';
 }
-function send(text){const c=active();if(!c||!text.trim())return;c.messages.push({role:'user',text:text.trim()});if(c.title==='Новый диалог')c.title=text.trim().slice(0,34);save();render();setTimeout(()=>{const now=active();if(!now||now.id!==c.id)return;now.messages.push({role:'ai',text:demoReply(text)});save();render()},350)}
+async function send(text) {
+const c = active();
+if (!c || !text.trim()) return;
+
+c.messages.push({ role: 'user', text: text.trim() });
+
+if (c.title === 'Новый диалог') {
+c.title = text.trim().slice(0, 34);
+}
+
+save();
+render();
+
+try {
+const result = await sendToNoire(text.trim());
+const now = active();
+
+if (!now || now.id !== c.id) return;
+
+now.messages.push({
+  role: 'ai',
+  text: result.reply || 'Сервер ответил без текста.'
+});
+} catch (error) {
+const now = active();
+
+if (!now || now.id !== c.id) return;
+
+now.messages.push({
+  role: 'ai',
+  text: 'Не удалось связаться с сервером. Попробуйте позже.'
+});
+}
+
+save();
+render();
+}
 function render(){
  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
  const m=document.getElementById('main');
