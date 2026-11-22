@@ -1825,7 +1825,16 @@ function render() {
         sessionStorage.removeItem("noire_token");
 
         render();
+} else if (tab === "studio") {
 
+main.innerHTML = studioHTML();
+
+document.getElementById("generateImage").onclick = () => {
+
+  document.getElementById("studioStatus").textContent =
+    "Генератор изображений пока не подключён. Это следующий этап настройки.";
+
+};
       }
 
     };
