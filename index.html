@@ -148,15 +148,52 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
 \n<script>
 const NOIRE_SERVER = "https://tiny-dust-495e.4vh4v2kv5d.workers.dev";
 
-async function sendToNoire(message) {
-  const response = await fetch(NOIRE_SERVER + "/chat", {
+const NOIRE_SERVER = "https://tiny-dust-495e.4vh4v2kv5d.workers.dev";
+
+async function loginToNoire(password) {
+  const response = await fetch(NOIRE_SERVER + "/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password })
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || "Ошибка авторизации");
+  }
+
+  sessionStorage.setItem("noire_token", result.token);
+  return result;
+}
+
+async function sendToNoire(message) {
+  const token = sessionStorage.getItem("noire_token");
+
+  if (!token) {
+    throw new Error("Сначала войдите в NOIRE");
+  }
+
+  const response = await fetch(NOIRE_SERVER + "/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
     body: JSON.stringify({ message })
   });
 
-  if (!response.ok) throw new Error("Server error");
-  return await response.json();
+  const result = await response.json();
+
+  if (response.status === 401) {
+    sessionStorage.removeItem("noire_token");
+  }
+
+  if (!response.ok) {
+    throw new Error(result.error || "Ошибка сервера");
+  }
+
+  return result;
 }
 </script>
 </body>
