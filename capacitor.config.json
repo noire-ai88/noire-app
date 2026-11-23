@@ -1,0 +1,14 @@
+
+{
+  "appId": "com.noire.ai",
+  "appName": "NOIRE",
+  "webDir": "www",
+  "server": {
+    "url": "https://noire-ai88.github.io/noire-app/",
+    "cleartext": false
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#09090c"
+  }
+}
