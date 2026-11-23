@@ -35,3 +35,10 @@ jobs:
 
       - name: Build iOS
         run: npx cap sync ios
+
+      - name: Save iOS project
+        uses: actions/upload-artifact@v4
+        with:
+          name: NOIRE-iOS-project
+          path: ios/
+          if-no-files-found: error
