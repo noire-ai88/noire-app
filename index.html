@@ -1105,6 +1105,34 @@ async function askNoire(message, chatMessages = []) {
 
   return result.reply || "Сервер ответил без текста.";
 }
+  
+async function memoryRequest(path, data = {}) {
+  const token = sessionStorage.getItem("noire_token");
+
+  const response = await fetch(SERVER + path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json().catch(() => ({}));
+
+  if (response.status === 401) {
+    sessionStorage.removeItem("noire_token");
+    render();
+    throw new Error("Сессия завершилась. Войди снова.");
+  }
+
+  if (!response.ok) {
+    throw new Error(result.error || "Ошибка работы с памятью.");
+  }
+
+  return result;
+}
+
 /* Экран входа */
 
 function renderLogin() {
