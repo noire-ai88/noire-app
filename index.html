@@ -1718,209 +1718,129 @@ return `
 }
 /* Основной рендер */
 
+
 function render() {
-
   if (!sessionStorage.getItem("noire_token")) {
-
     renderLogin();
-
     return;
-
   }
 
   navigation.hidden = false;
-
   statusElement.textContent = "● СЕССИЯ АКТИВНА";
 
   document.querySelectorAll(".tab").forEach(button => {
-
-    button.classList.toggle("active", button.dataset.tab === tab);
-
+    button.classList.toggle(
+      "active",
+      button.dataset.tab === tab
+    );
   });
 
   if (tab === "chat") {
-
     main.innerHTML = chatHTML();
 
     const create = document.getElementById("createChat");
-
     if (create) create.onclick = newChat;
 
     document.querySelectorAll("[data-mode]").forEach(button => {
-
       button.onclick = () => {
-
         state.mode = button.dataset.mode;
-
         save();
-
         render();
-
       };
-
     });
 
     const input = document.getElementById("prompt");
-
     const send = document.getElementById("send");
 
     const submit = () => {
+      const value = input.value.trim();
 
-      const value = input.value;
+      if (!value || busy) return;
 
-      if (value.trim() && !busy) {
+      if (!active()) newChat();
 
-        if (!active()) newChat();
-
-        else sendMessage(value);
-
-      }
-
+      sendMessage(value);
     };
 
     send.onclick = submit;
 
     input.addEventListener("keydown", event => {
-
       if (event.key === "Enter" && !event.shiftKey) {
-
         event.preventDefault();
-
         submit();
-
       }
-
     });
 
     const messages = document.getElementById("messages");
-
     messages.scrollTop = messages.scrollHeight;
 
   } else if (tab === "history") {
-
     main.innerHTML = historyHTML();
 
     const newButton = document.getElementById("newChat");
-
     if (newButton) newButton.onclick = newChat;
 
     document.querySelectorAll("[data-open]").forEach(button => {
-
       button.onclick = () => {
-
         state.activeChat = Number(button.dataset.open);
-
         tab = "chat";
-
         save();
-
         render();
-
       };
-
     });
 
     document.querySelectorAll("[data-delete]").forEach(button => {
-
       button.onclick = () => {
-
         const id = Number(button.dataset.delete);
 
         state.chats = state.chats.filter(chat => chat.id !== id);
 
         if (state.activeChat === id) {
-
           state.activeChat = null;
-
         }
 
         save();
-
         render();
-
       };
-
     });
 
   } else if (tab === "memory") {
-
-    main.innerHTML = memoryHTML();
-
-    document.getElementById("addMemory").onclick = () => {
-
-      const input = document.getElementById("memoryInput");
-
-      const value = input.value.trim();
-
-      if (value) {
-
-        state.memories.push(value);
-
-        save();
-
-        render();
-
-      }
-
-    };
-
-    document.querySelectorAll("[data-remove]").forEach(button => {
-
-      button.onclick = () => {
-
-        state.memories.splice(Number(button.dataset.remove), 1);
-
-        save();
-
-        render();
-
-      };
-
-    });
+    renderMemory();
 
   } else if (tab === "personality") {
-
     main.innerHTML = personalityHTML();
 
     document.getElementById("saveInstructions").onclick = () => {
-
-      state.instructions = document.getElementById("instructions").value;
+      state.instructions =
+        document.getElementById("instructions").value;
 
       save();
 
-      document.getElementById("feedback").textContent = "Инструкция сохранена на устройстве.";
-
+      document.getElementById("feedback").textContent =
+        "Инструкция сохранена на устройстве.";
     };
 
     document.getElementById("logout").onclick = logout;
 
     document.getElementById("clearData").onclick = () => {
-
-      if (confirm("Удалить все локальные переписки, память и настройки?")) {
-
+      if (confirm(
+        "Удалить все локальные переписки, память и настройки?"
+      )) {
         localStorage.removeItem("noire_state");
-
         state = structuredClone(DEFAULT_STATE);
-
         sessionStorage.removeItem("noire_token");
-
         render();
-} else if (tab === "studio") {
-
-main.innerHTML = studioHTML();
-
-document.getElementById("generateImage").onclick = () => {
-
-  document.getElementById("studioStatus").textContent =
-    "Генератор изображений пока не подключён. Это следующий этап настройки.";
-
-};
       }
-
     };
 
-  }
+  } else if (tab === "studio") {
+    main.innerHTML = studioHTML();
 
+    document.getElementById("generateImage").onclick = () => {
+      document.getElementById("studioStatus").textContent =
+        "Генератор изображений пока не подключён. Это следующий этап настройки.";
+    };
+  }
 }
 
 /* Переключение разделов */
