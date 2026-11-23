@@ -1,0 +1,37 @@
+
+name: NOIRE iOS Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install @capacitor/core @capacitor/ios
+          npm install -D @capacitor/cli
+
+      - name: Prepare web directory
+        run: |
+          mkdir -p www
+          cp index.html www/
+          cp -f service-worker.js www/ || true
+          cp -f manifest.json www/ || true
+
+      - name: Initialize Capacitor
+        run: npx cap add ios
+
+      - name: Build iOS
+        run: npx cap sync ios
