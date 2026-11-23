@@ -1,0 +1,51 @@
+
+workflows:
+  noire-ios:
+    name: NOIRE iOS
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      node: 22
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Install Capacitor
+        script: |
+          npm init -y
+          npm install @capacitor/core @capacitor/ios
+          npm install --save-dev @capacitor/cli
+
+      - name: Prepare web files
+        script: |
+          mkdir -p www
+          cp index.html www/index.html
+          if [ -f service-worker.js ]; then
+            cp service-worker.js www/
+          fi
+          if [ -f manifest.json ]; then
+            cp manifest.json www/
+          fi
+
+      - name: Create iOS project
+        script: npx cap add ios
+
+      - name: Sync Capacitor
+        script: npx cap sync ios
+
+      - name: Build iOS
+        script: |
+          xcodebuild \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build/ios \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+    artifacts:
+      - build/ios/Build/Products/Debug-iphoneos/*.app
+      - /tmp/xcodebuild_logs/*.log
