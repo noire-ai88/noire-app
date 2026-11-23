@@ -1330,7 +1330,7 @@ function chatHTML() {
 
           </div>
 
-          ${esc(message.text)}
+         <div class="message-text">${esc(message.text).replace(/\n{2,}/g, "\n").replace(/\n/g, "<br>")}</div>
 
         </div>
 
