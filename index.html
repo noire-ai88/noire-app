@@ -1341,7 +1341,7 @@ function chatHTML() {
 
           </div>
 
-         <div class="message-text">${esc(message.text).replace(/\n{2,}/g, "\n").replace(/\n/g, "<br>")}</div>
+         <div class="message-text">${esc(message.text).replace(/\r\n?/g, "\n").split("\n").map(line => line.trim()).filter(Boolean).join("<br>")}</div>
 
         </div>
 
